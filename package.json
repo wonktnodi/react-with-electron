@@ -27,6 +27,7 @@
     "preelectron-pack": "yarn build"
   },
   "devDependencies": {
+    "babel-plugin-import": "^1.8.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
     "concurrently": "^3.5.1",
