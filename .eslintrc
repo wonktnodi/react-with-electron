@@ -22,7 +22,8 @@
     "comma-dangle": [0],
     "no-unused-expressions": [0],
     "block-scoped-var": [0],
-    "react/prop-types": [0]
+    "react/prop-types": [0],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
   },
   "env": {
     "es6": true,

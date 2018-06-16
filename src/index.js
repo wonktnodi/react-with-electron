@@ -1,18 +1,19 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import { Switch, Route, BrowserRouter } from "react-router-dom";
-import adapter from "webrtc-adapter";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import adapter from 'webrtc-adapter';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
-import configureStore from "./stores/configureStore";
+import configureStore from './stores/configureStore';
 
-import "./index.css";
+import './index.css';
+import theme from './styles/createTheme';
 
-import Home from "./containers/Home";
-import Room from "./containers/Room";
+import Home from './containers/Home';
+import Room from './containers/Room';
 
-const theme = createMuiTheme();
+// const theme = createMuiTheme();
 
 if (window) {
   window.adapter = adapter;
@@ -35,4 +36,4 @@ function content() {
   );
 }
 
-ReactDOM.render(content(), document.getElementById("root"));
+ReactDOM.render(content(), document.getElementById('root'));
