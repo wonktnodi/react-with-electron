@@ -1,24 +1,25 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import Toolbar from "@material-ui/core/Toolbar";
+import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit
   },
   input: {
-    display: 'none',
-  },
+    display: 'none'
+  }
 });
 
 @withStyles(styles, { withTheme: true })
 @connect(
-  store => ({}),
+  // store => ({}),
+  () => ({}),
   dispatch => bindActionCreators({}, dispatch)
 )
 class Room extends Component {
@@ -27,8 +28,8 @@ class Room extends Component {
     return (
       <div>
         <Toolbar>
-            <TextField hintText="Folder Path" />
-            <Button variant="raised">Browse</Button>
+          <TextField hintText="Folder Path" />
+          <Button variant="raised">Browse</Button>
         </Toolbar>
       </div>
     );
