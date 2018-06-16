@@ -20,6 +20,9 @@ function createWindow() {
     applicationVersion: "0.0.1"
   });
 
+  if (isDev) {
+    mainWindow.maximize();
+  }
   mainWindow.on("closed", () => (mainWindow = null));
 }
 
