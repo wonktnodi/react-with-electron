@@ -6,7 +6,14 @@
     "electron": "^2.0.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4"
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "1.1.4",
+    "redux": "^4.0.0",
+    "redux-create-reducer": "^1.1.2",
+    "redux-thunk": "^2.3.0",
+    "reselect": "^3.0.1",
+    "webrtc-adapter": "^6.2.1"
   },
   "main": "public/main.js",
   "homepage": "./",
@@ -25,6 +32,7 @@
     "electron-builder": "^20.15.1",
     "electron-is-dev": "^0.3.0",
     "react-app-rewired": "^1.5.2",
+    "redux-logger": "^3.0.6",
     "wait-on": "^2.1.0"
   }
 }
