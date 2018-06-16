@@ -7,8 +7,30 @@ const path = require("path");
 
 let mainWindow;
 
-function createWindow() {
-  mainWindow = new BrowserWindow({ width: 900, height: 680 });
+const installExtensions = async () => {
+  const installer = require("electron-devtools-installer");
+  const extensions = ["REACT_DEVELOPER_TOOLS", "REDUX_DEVTOOLS"];
+  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+  for (const name of extensions) {
+    try {
+      await installer.default(installer[name], forceDownload);
+    } catch (e) {
+      console.log(`Error installing ${name} extension: ${e.message}`);
+    }
+  }
+};
+
+async function createWindow() {
+  if (isDev) {
+    await installExtensions();
+  }
+  mainWindow = new BrowserWindow({
+    width: 900,
+    height: 680,
+    webPreferences: {
+      webSecurity: false
+    }
+  });
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
@@ -22,6 +44,8 @@ function createWindow() {
 
   if (isDev) {
     mainWindow.maximize();
+    // auto-open dev tools
+    mainWindow.webContents.openDevTools();
   }
   mainWindow.on("closed", () => (mainWindow = null));
 }
