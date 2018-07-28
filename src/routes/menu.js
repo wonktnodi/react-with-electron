@@ -8,14 +8,17 @@ const menuData = [
       {
         name: '分析页',
         path: 'first',
+        component: 'FirstPage'
       },
       {
         name: '监控页',
         path: 'second',
+        component: "SecondPage"
       },
       {
         name: '工作台',
         path: 'other',
+        component: "OtherPage"
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },

@@ -92,7 +92,7 @@ class App extends Component {
       // fetchingNotices,
       // notices,
       // routerData,
-      // match,
+      match,
       location,
     } = this.props;
     const { collapsed, isMobile: mb } = this.state;
@@ -125,7 +125,7 @@ class App extends Component {
               // onNoticeVisibleChange={this.handleNoticeVisibleChange}
             />
           </Header>
-          <Content style={{ margin: '24px 24px 0', height: '100%' }}>{generateRoutes()}</Content>
+          <Content style={{ margin: '24px 24px 0', height: '100%' }}>{generateRoutes(match.path)}</Content>
         </Layout>
       </Layout>
     );
