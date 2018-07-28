@@ -13,6 +13,11 @@ const routes = [
     title: "second page",
     path: "/app/second",
     component: "SecondPage"
+  },
+  {
+    title: "other page",
+    path: "/app/other",
+    component: "OtherPage"
   }
 ];
 
