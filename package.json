@@ -10,6 +10,7 @@
     "lodash-decorators": "^6.0.0",
     "moment": "^2.22.2",
     "path-to-regexp": "^2.2.1",
+    "prop-types": "^15.6.2",
     "rc-drawer": "^1.6.2",
     "react": "^16.4.1",
     "react-document-title": "^2.0.3",

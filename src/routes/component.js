@@ -1,4 +1,4 @@
-import { FirstPage, SecondPage, OtherPage } from "../components/FirstPage";
+import { FirstPage, SecondPage, OtherPage } from "../containers/TestContent";
 
 export default {
   FirstPage,

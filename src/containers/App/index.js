@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Layout } from 'antd';
+import PropTypes from 'prop-types';
 import pathToRegexp from 'path-to-regexp';
 // import { Link } from 'react-router-dom';
 
@@ -33,16 +34,24 @@ const getBreadcrumbNameMap = (menuData, routerData) => {
 };
 
 class App extends Component {
+  static childContextTypes = {
+    location: PropTypes.object,
+    breadcrumbNameMap: PropTypes.object,
+  };
+
   state = {
     collapsed: false,
     isMobile: false,
   };
 
-  toggle = () => {
-    this.setState({
-      collapsed: !this.state.collapsed,
-    });
-  };
+  getChildContext() {
+    const { location, routerData } = this.props;
+    const crumbData = getBreadcrumbNameMap(getMenuData(), routerData)
+    return {
+      location,
+      breadcrumbNameMap: crumbData,
+    };
+  }
 
   handleMenuCollapse = collapsed => {
     // const { dispatch } = this.props;

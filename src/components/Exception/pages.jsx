@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Exception from "./index";
+import Exception from ".";
 
 export const Page403 = () => (
   <Exception
