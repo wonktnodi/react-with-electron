@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Layout } from 'antd';
 import PropTypes from 'prop-types';
 import pathToRegexp from 'path-to-regexp';
-// import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import SiderMenu from '../../components/SiderMenu';
 import GlobalHeader from '../../components/GlobalHeader';
@@ -33,6 +33,10 @@ const getBreadcrumbNameMap = (menuData, routerData) => {
   return Object.assign({}, routerData, result, childResult);
 };
 
+@connect(
+  state => ({}),
+  {}
+)
 class App extends Component {
   static childContextTypes = {
     location: PropTypes.object,
@@ -46,7 +50,7 @@ class App extends Component {
 
   getChildContext() {
     const { location, routerData } = this.props;
-    const crumbData = getBreadcrumbNameMap(getMenuData(), routerData)
+    const crumbData = getBreadcrumbNameMap(getMenuData(), routerData);
     return {
       location,
       breadcrumbNameMap: crumbData,
@@ -134,7 +138,9 @@ class App extends Component {
               // onNoticeVisibleChange={this.handleNoticeVisibleChange}
             />
           </Header>
-          <Content style={{ margin: '24px 24px 0', height: '100%' }}>{generateRoutes(match.path)}</Content>
+          <Content style={{ margin: '24px 24px 0', height: '100%' }}>
+            {generateRoutes(match.path)}
+          </Content>
         </Layout>
       </Layout>
     );
