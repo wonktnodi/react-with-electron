@@ -10,6 +10,8 @@ import GlobalHeader from '../../components/GlobalHeader';
 import { generateRoutes } from '../../routes';
 import { getMenuData } from '../../routes/menu';
 
+import * as types from '../../actions/types';
+
 import logo from '../../assets/logo.svg';
 
 const { Header, Content } = Layout;
@@ -34,8 +36,12 @@ const getBreadcrumbNameMap = (menuData, routerData) => {
 };
 
 @connect(
-  state => ({}),
-  {}
+  state => ({ global = {} }) => {
+  return {
+  collapsed: global.collapsed,
+  };
+  }
+  // {}
 )
 class App extends Component {
   static childContextTypes = {
@@ -58,13 +64,13 @@ class App extends Component {
   }
 
   handleMenuCollapse = collapsed => {
-    // const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'global/changeLayoutCollapsed',
-    //   payload: collapsed,
-    // });
+    const { dispatch } = this.props;
+    dispatch({
+      type: types.GLOBAL_CHANGE_LAYOUT_COLLAPSED,
+      payload: collapsed,
+    });
     this.setState({
-      collapsed: collapsed,
+      collapsed,
     });
   };
 
