@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import unionBy from 'lodash/unionBy';
 
 import { getMenuData } from './menu';
@@ -7,23 +7,24 @@ import AllComponents from './component';
 
 let routerDataCache = null;
 
-// const routes = [
-//   {
-//     title: 'first page',
-//     path: '/app/first',
-//     component: 'FirstPage',
-//   },
-//   {
-//     title: 'second page',
-//     path: '/app/second',
-//     component: 'SecondPage',
-//   },
-//   {
-//     title: 'other page',
-//     path: '/app/other',
-//     component: 'OtherPage',
-//   },
-// ];
+/**
+ * 根据菜单取得重定向地址.
+ */
+const redirectData = [];
+const getRedirect = item => {
+  if (item && item.children) {
+    if (item.children[0] && item.children[0].path) {
+      redirectData.push({
+        from: `${item.path}`,
+        to: `${item.children[0].path}`,
+      });
+      item.children.forEach(children => {
+        getRedirect(children);
+      });
+    }
+  }
+};
+getMenuData().forEach(getRedirect);
 
 const othersRoutes = [
   {
@@ -70,11 +71,10 @@ export function getRouterData() {
   return routerDataCache;
 }
 
-function routesFromMenuData(path) {
+function routesFromMenuData() {
   if (!routerDataCache) {
     routerDataCache = generateRouterData();
   }
-
   const menuRoutes = [];
   Object.keys(menusData).forEach(key => {
     if (!menusData[key].children && menusData[key].component) {
@@ -85,12 +85,12 @@ function routesFromMenuData(path) {
   const newData = unionBy(menuRoutes.concat(othersRoutes), 'path');
   return (
     <Switch>
-      {newData.map((item, i) => {
+      {newData.map(item => {
         let Component = null;
         if (item.component) Component = AllComponents[item.component];
         return Component ? (
           <Route
-            key={i}
+            key={item.path}
             path={item.path}
             render={props => <Component {...props} routerData={routerDataCache} />}
           />
@@ -98,10 +98,9 @@ function routesFromMenuData(path) {
           undefined
         );
       })}
+      {redirectData.map(item => <Redirect key={item.from} exact from={item.from} to={item.to} />)}
     </Switch>
   );
 }
 
-export const generateRoutes = path => {
-  return routesFromMenuData();
-};
+export const generateRoutes = () => routesFromMenuData();

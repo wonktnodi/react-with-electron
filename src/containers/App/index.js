@@ -36,11 +36,9 @@ const getBreadcrumbNameMap = (menuData, routerData) => {
 };
 
 @connect(
-  state => ({ global = {} }) => {
-  return {
-  collapsed: global.collapsed,
-  };
-  }
+  state => ({ global = {} }) => ({
+    collapsed: global.collapsed,
+  })
   // {}
 )
 class App extends Component {
