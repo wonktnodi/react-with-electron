@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Checkbox, Alert } from 'antd';
+import { push } from 'connected-react-router';
 import Login from '../../components/Login';
 import styles from './Login.module.less';
 
@@ -33,6 +34,7 @@ export default class LoginPage extends Component {
           type,
         },
       });
+      dispatch(push('/app'));
     }
   };
 
