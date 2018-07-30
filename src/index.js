@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import adapter from 'webrtc-adapter';
+import FetchMock from 'react-fetch-mock'; // eslint-disable-line
 
 import configureStore, { history } from './stores/configureStore';
 
@@ -17,6 +18,11 @@ import { Page403, Page404, Page500 } from './components/Exception/pages';
 
 if (window) {
   window.adapter = adapter;
+}
+
+// global setting
+if (process.env.NODE_ENV === 'development') {
+  window.fetch = new FetchMock(require('./__mocks__')).fetch; // eslint-disable-line
 }
 
 const store = configureStore();

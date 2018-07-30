@@ -72,8 +72,10 @@
     "less": "2.7.2",
     "less-loader": "^4.1.0",
     "lodash.clonedeep": "^4.5.0",
+    "mockjs": "^1.0.1-beta3",
     "prettier": "^1.13.7",
     "react-app-rewired": "^1.5.2",
+    "react-fetch-mock": "^0.7.1",
     "react-scripts": "1.1.4",
     "redux-logger": "^3.0.6",
     "wait-on": "^2.1.0"

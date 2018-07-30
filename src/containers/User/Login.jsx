@@ -34,7 +34,17 @@ export default class LoginPage extends Component {
           type,
         },
       });
-      dispatch(push('/app'));
+
+      fetch('https://www.imagicstone.com/api/users')
+        .then(res => {
+          // debugger;
+          return res.json();
+        })
+        .then(data => {
+          console.log(data);
+          dispatch(push('/app'));
+          return { data };
+        });
     }
   };
 
