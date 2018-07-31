@@ -21,9 +21,9 @@ if (window) {
 }
 
 // global setting
-if (process.env.NODE_ENV === 'development') {
-  window.fetch = new FetchMock(require('./__mocks__')).fetch; // eslint-disable-line
-}
+// if (process.env.NODE_ENV === 'development') {
+//   window.fetch = new FetchMock(require('./__mocks__')).fetch; // eslint-disable-line
+// }
 
 const store = configureStore();
 

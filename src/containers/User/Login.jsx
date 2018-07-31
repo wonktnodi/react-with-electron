@@ -6,6 +6,7 @@ import Login from '../../components/Login';
 import styles from './Login.module.less';
 
 import * as types from '../../actions/types';
+import userApi from '../../api/users';
 
 const { Tab, UserName, Password, Submit } = Login;
 
@@ -35,16 +36,10 @@ export default class LoginPage extends Component {
         },
       });
 
-      fetch('https://www.imagicstone.com/api/users')
-        .then(res => {
-          // debugger;
-          return res.json();
-        })
-        .then(data => {
-          console.log(data);
-          dispatch(push('/app'));
-          return { data };
-        });
+      userApi
+        .login({ username: '1111', password: '111111' })
+        .then(res => console.log('login res: ', res));
+      // dispatch(push('/app'));
     }
   };
 
