@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Checkbox, Alert } from 'antd';
-import { push } from 'connected-react-router';
+// import { push } from 'connected-react-router';
 import Login from '../../components/Login';
 import styles from './Login.module.less';
 
-import * as types from '../../actions/types';
-import userApi from '../../api/users';
+import { userLogin } from '../../actions/users';
 
 const { Tab, UserName, Password, Submit } = Login;
 
-@connect(({ login, loading }) => ({
-  login,
-  // submitting: loading.effects['login/login'],
-}))
+@connect(
+  ({ login, loading }) => ({ login, submitting: loading.effects['login/login'] }),
+  dispatch => bindActionCreators({ userLogin }, dispatch)
+)
 export default class LoginPage extends Component {
   state = {
     type: 'account',
@@ -25,21 +25,8 @@ export default class LoginPage extends Component {
   };
 
   handleSubmit = (err, values) => {
-    const { type } = this.state;
-    const { dispatch } = this.props;
     if (!err) {
-      dispatch({
-        type: types.USER_LOGIN,
-        payload: {
-          ...values,
-          type,
-        },
-      });
-
-      userApi
-        .login({ username: '1111', password: '111111' })
-        .then(res => console.log('login res: ', res));
-      // dispatch(push('/app'));
+      this.props.userLogin('1111', '111111');
     }
   };
 

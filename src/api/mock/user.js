@@ -12,7 +12,7 @@ export default mock => {
         console.log(config);
         setTimeout(() => {
           resolve([
-            200,
+            401,
             {
               headImg: 'https://randomuser.me/api/portraits/women/50.jpg',
               nickName: 'Marie Hunter',
