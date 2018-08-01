@@ -1,4 +1,5 @@
 import { isUrl } from '../utils/utils';
+
 const menuData = [
   {
     name: 'dashboard',
@@ -8,17 +9,17 @@ const menuData = [
       {
         name: '分析页',
         path: 'first',
-        component: 'FirstPage'
+        component: 'FirstPage',
       },
       {
         name: '监控页',
         path: 'second',
-        component: "SecondPage"
+        component: 'SecondPage',
       },
       {
         name: '工作台',
         path: 'other',
-        component: "OtherPage"
+        component: 'OtherPage',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
@@ -45,3 +46,5 @@ function formatter(data, parentPath = '/', parentAuthority) {
 }
 
 export const getMenuData = () => formatter(menuData);
+export default getMenuData;
+

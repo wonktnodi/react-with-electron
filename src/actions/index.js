@@ -1,9 +1,32 @@
 import * as types from './types';
-import { fetchData } from './common';
+import { fetchData, doAction } from './common';
 
 export const userLogin = (username, password, type) => {
   const stateName = types.USER_LOGIN;
   return fetchData(stateName, { username, password, type });
 };
 
-export const userLogout = () => {};
+export const userLogout = () => {
+  const stateName = types.USER_LOGOUT;
+  return doAction(stateName);
+};
+
+// export const userLogout = () => dispatch => {
+//   try {
+//     const urlParams = new URL(window.location.href);
+//     console.log(urlParams);
+//     //     const pathname = yield select(state => state.routing.location.pathname);
+//     //     // add the parameters in the url
+//     //     urlParams.searchParams.set('redirect', pathname);
+//     //     window.history.replaceState(null, 'login', urlParams.href);
+//   } finally {
+//     dispatch(push('/user/login'));
+//   }
+// };
+
+export const changeLayoutCollapse = collapsed => dispatch => {
+  dispatch({
+    type: types.GLOBAL_CHANGE_LAYOUT_COLLAPSED,
+    payload: collapsed,
+  });
+};

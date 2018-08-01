@@ -4,14 +4,15 @@ import PropTypes from 'prop-types';
 import pathToRegexp from 'path-to-regexp';
 import { connect } from 'react-redux';
 
+import { push } from 'connected-react-router';
+import { bindActionCreators } from 'redux';
 import SiderMenu from '../../components/SiderMenu';
 import GlobalHeader from '../../components/GlobalHeader';
 
 import { generateRoutes } from '../../routes';
 import { getMenuData } from '../../routes/menu';
 
-import * as types from '../../actions/types';
-
+import { userLogout, changeLayoutCollapse} from '../../actions';
 import logo from '../../assets/logo.svg';
 
 const { Header, Content } = Layout;
@@ -36,10 +37,11 @@ const getBreadcrumbNameMap = (menuData, routerData) => {
 };
 
 @connect(
-  state => ({ global = {} }) => ({
+  state => ({ user, global = {} }) => ({
     collapsed: global.collapsed,
-  })
-  // {}
+    currentUser: user.currentUser,
+  }),
+  dispatch => bindActionCreators({ userLogout }, dispatch)
 )
 class App extends Component {
   static childContextTypes = {
@@ -62,27 +64,22 @@ class App extends Component {
   }
 
   handleMenuCollapse = collapsed => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: types.GLOBAL_CHANGE_LAYOUT_COLLAPSED,
-      payload: collapsed,
-    });
+    // const { dispatch } = this.props;
+    changeLayoutCollapse(collapsed);
     this.setState({
       collapsed,
     });
   };
 
   handleMenuClick = ({ key }) => {
-    // const { dispatch } = this.props;
-    // if (key === 'triggerError') {
-    //   dispatch(routerRedux.push('/exception/trigger'));
-    //   return;
-    // }
-    // if (key === 'logout') {
-    //   dispatch({
-    //     type: 'login/logout',
-    //   });
-    // }
+    const { dispatch } = this.props;
+    if (key === 'triggerError') {
+      dispatch(push('/exception/trigger'));
+      return;
+    }
+    if (key === 'logout') {
+      this.props.userLogout();
+    }
   };
 
   getPageTitle = () => {
@@ -104,7 +101,7 @@ class App extends Component {
 
   render() {
     const {
-      // currentUser,
+      currentUser,
       // collapsed,
       // fetchingNotices,
       // notices,
@@ -131,14 +128,14 @@ class App extends Component {
           <Header style={{ background: '#fff', padding: 0 }}>
             <GlobalHeader
               logo={logo}
-              // currentUser={currentUser}
+              currentUser={currentUser}
               // fetchingNotices={fetchingNotices}
               // notices={notices}
               collapsed={collapsed}
               isMobile={mb}
               // onNoticeClear={this.handleNoticeClear}
               onCollapse={this.handleMenuCollapse}
-              // onMenuClick={this.handleMenuClick}
+              onMenuClick={this.handleMenuClick}
               // onNoticeVisibleChange={this.handleNoticeVisibleChange}
             />
           </Header>

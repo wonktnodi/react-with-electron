@@ -1,3 +1,4 @@
+import { push } from 'connected-react-router';
 import * as types from './types';
 import userApi from '../api/users';
 
@@ -17,7 +18,6 @@ export const internalLogin = async data => {
 
 export const process = ({ data, dispatch }) => {
   if (data.error) {
-    console.log('get error: ', data.error);
     dispatch({
       type: types.USER_LOGIN,
       payload: { error: data.error, data: data.data },
@@ -29,11 +29,28 @@ export const process = ({ data, dispatch }) => {
     type: types.USER_SAVE_INFO,
     payload: data.data,
   });
+  dispatch(push('/'));
 };
 
-export const intarnalLogout = 0;
+const logout = ({ dispatch }) => {
+  try {
+    const urlParams = new URL(window.location.href);
+    console.log(urlParams);
+    //     const pathname = yield select(state => state.routing.location.pathname);
+    //     // add the parameters in the url
+    //     urlParams.searchParams.set('redirect', pathname);
+    //     window.history.replaceState(null, 'login', urlParams.href);
+  } finally {
+    dispatch(push('/user/login'));
+  }
+};
 
 export default {
-  action: internalLogin,
-  process,
+  login: {
+    action: internalLogin,
+    process,
+  },
+  logout: {
+    action: logout
+  }
 };

@@ -11,6 +11,21 @@ const receiveData = category => ({
   category,
 });
 
+export const doAction = (actionName, data) => dispatch => {
+  const executor = effects[actionName];
+  console.log(effects);
+  if (!executor) {
+    console.log(`effect[${actionName}] is undefined`);
+    return;
+  }
+
+  try {
+    executor.action({ ...data, dispatch });
+  } catch (error) {
+    console.log(`do action[${actionName}] is catch error: `, error);
+  }
+};
+
 export const fetchData = (stateName, data) => async dispatch => {
   const executor = effects[stateName];
   if (!executor) {
@@ -22,9 +37,8 @@ export const fetchData = (stateName, data) => async dispatch => {
     const resp = await executor.action({ ...data, dispatch });
     dispatch(receiveData(stateName));
 
-    debugger;
     if (executor.process) {
-      executor.process({data: resp, dispatch});
+      executor.process({ data: resp, dispatch });
     }
 
     return;

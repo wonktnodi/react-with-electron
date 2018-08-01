@@ -7,7 +7,7 @@ export default mock => {
   // });
 
   mock.onPost('/login').reply(
-    config =>
+    config =>  // eslint-disable-line
       new Promise(resolve => {
         setTimeout(() => {
           resolve([

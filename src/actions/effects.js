@@ -4,5 +4,6 @@ import * as types from './types';
 import users from './users';
 
 export default {
-  [types.USER_LOGIN]: users,
+  [types.USER_LOGIN]: users.login,
+  [types.USER_LOGOUT]: users.logout,
 };
