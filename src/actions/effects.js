@@ -1,7 +1,8 @@
 import * as types from './types';
 
-import userApi from '../api/users';
+// import userApi from '../api/users';
+import users from './users';
 
 export default {
-  [types.USER_LOGIN]: userApi.login,
+  [types.USER_LOGIN]: users,
 };

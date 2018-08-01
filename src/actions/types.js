@@ -9,4 +9,5 @@ export const LOADING_HIDE = 'loading/hide';
 
 // user
 export const USER_LOGIN = 'login/login';
+export const USER_SAVE_INFO = 'login/saveInfo';
 export const USER_CHANGE_LOGIN_STATUS = 'login/changeLoginStatus';

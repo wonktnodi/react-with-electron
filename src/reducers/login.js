@@ -12,6 +12,22 @@ export default function login(state = initialState, action) {
       status: action.payload.status,
       type: action.payload.type,
     };
+  case types.USER_LOGIN: {
+    const { payload } = action;
+    if (payload.error) {
+      return {
+        ...state,
+        status: 401,
+        type: payload.data.type
+      };
+    }
+
+    return {
+      ...state,
+      status: 200,
+      type: payload.data.type,
+    };
+  }
   default:
     return state;
   }

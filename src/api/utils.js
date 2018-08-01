@@ -17,7 +17,7 @@ const request = ({ url, method, params, data, headers, dispatch }) =>
       return {
         config: e.config,
         status: e.response.status,
-        data: e.response.data,
+        data: e.response.data || {},
         error: e,
       };
 

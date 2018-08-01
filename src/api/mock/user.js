@@ -9,10 +9,9 @@ export default mock => {
   mock.onPost('/login').reply(
     config =>
       new Promise(resolve => {
-        console.log(config);
         setTimeout(() => {
           resolve([
-            401,
+            200,
             {
               headImg: 'https://randomuser.me/api/portraits/women/50.jpg',
               nickName: 'Marie Hunter',

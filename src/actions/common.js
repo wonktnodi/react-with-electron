@@ -15,17 +15,22 @@ export const fetchData = (stateName, data) => async dispatch => {
   const executor = effects[stateName];
   if (!executor) {
     console.log(`effect[${stateName}] is undefined`);
-    return undefined;
+    return;
   }
   try {
     dispatch(requestData(stateName));
-    const resp = await executor({ ...data, dispatch });
+    const resp = await executor.action({ ...data, dispatch });
     dispatch(receiveData(stateName));
-    // console.log(resp);
-    return resp && resp.data;
+
+    debugger;
+    if (executor.process) {
+      executor.process({data: resp, dispatch});
+    }
+
+    return;
   } catch (error) {
     console.log(`effect[${stateName}] is catch error: `, error);
-    return undefined;
+    dispatch(receiveData(stateName));
   }
 };
 

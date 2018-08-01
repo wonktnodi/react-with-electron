@@ -6,7 +6,7 @@ import { Checkbox, Alert } from 'antd';
 import Login from '../../components/Login';
 import styles from './Login.module.less';
 
-import { userLogin } from '../../actions/users';
+import { userLogin } from '../../actions';
 
 const { Tab, UserName, Password, Submit } = Login;
 
@@ -25,8 +25,9 @@ export default class LoginPage extends Component {
   };
 
   handleSubmit = (err, values) => {
+    const { type } = this.state;
     if (!err) {
-      this.props.userLogin('1111', '111111');
+      this.props.userLogin('1111', '111111', type);
     }
   };
 
@@ -37,7 +38,7 @@ export default class LoginPage extends Component {
   };
 
   renderMessage = content => (
-    <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
+    <Alert style={{ marginBottom: 24 }} message={content} closable type="error" showIcon />
   );
 
   render() {
@@ -47,10 +48,10 @@ export default class LoginPage extends Component {
       <div className={styles.main}>
         <Login defaultActiveKey={type} onTabChange={this.onTabChange} onSubmit={this.handleSubmit}>
           <Tab key="account" tab="账户密码登录">
-            {login.status === 'error' &&
+            {login.status !== 200 &&
               login.type === 'account' &&
               !submitting &&
-              this.renderMessage('账户或密码错误（admin/888888）')}
+              this.renderMessage('账户或密码错误')}
             <UserName name="userName" placeholder="admin/user" />
             <Password name="password" placeholder="888888/123456" />
           </Tab>
@@ -63,7 +64,7 @@ export default class LoginPage extends Component {
             </a>
           </div>
           <Submit loading={submitting}>
-登录
+            {'登录'}
           </Submit>
         </Login>
       </div>
