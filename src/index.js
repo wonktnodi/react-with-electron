@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import adapter from 'webrtc-adapter';
-import FetchMock from 'react-fetch-mock'; // eslint-disable-line
 
+import Authorized from './utils/Authorized';
 import configureStore, { history } from './stores/configureStore';
 
 import { getRouterData } from './routes';
@@ -14,30 +14,29 @@ import './index.less';
 import App from './containers/App';
 import User from './layouts/UserLayout';
 
-import { Page403, Page404, Page500 } from './components/Exception/pages';
+import { Page404 } from './components/Exception/pages';
 
 if (window) {
   window.adapter = adapter;
 }
 
-// global setting
-// if (process.env.NODE_ENV === 'development') {
-//   window.fetch = new FetchMock(require('./__mocks__')).fetch; // eslint-disable-line
-// }
-
 const store = configureStore();
+const { AuthorizedRoute } = Authorized;
 
 function content() {
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <Switch>
-          <Route path="/app" render={props => <App {...props} routerData={getRouterData()} />} />
           <Route path="/user" component={User} />
-          <Route exact path="/403" component={Page403} />
-          <Route exact path="/404" component={Page404} />
-          <Route exact path="/500" component={Page500} />
-          <Redirect exact from="/" to="/app" />
+          <AuthorizedRoute
+            path="/"
+            render={props => <App {...props} routerData={getRouterData()} />}
+            authority={['admin', 'user']}
+            redirectPath="/user"
+          />
+          {/* <Route path="/" render={props => <App {...props} routerData={getRouterData()} />} /> */}
+          <Route component={Page404} />
         </Switch>
       </ConnectedRouter>
     </Provider>

@@ -6,13 +6,14 @@ import { connect } from 'react-redux';
 
 import { push } from 'connected-react-router';
 import { bindActionCreators } from 'redux';
+import Authorized from '../../utils/Authorized';
 import SiderMenu from '../../components/SiderMenu';
 import GlobalHeader from '../../components/GlobalHeader';
 
 import { generateRoutes } from '../../routes';
 import { getMenuData } from '../../routes/menu';
 
-import { userLogout, changeLayoutCollapse} from '../../actions';
+import { userLogout, changeLayoutCollapse } from '../../actions';
 import logo from '../../assets/logo.svg';
 
 const { Header, Content } = Layout;
@@ -117,7 +118,7 @@ class App extends Component {
           // 不带Authorized参数的情况下如果没有权限,会强制跳到403界面
           // If you do not have the Authorized parameter
           // you will be forced to jump to the 403 interface without permission
-          // Authorized={Authorized}
+          Authorized={Authorized}
           menuData={getMenuData()}
           collapsed={collapsed}
           location={location}

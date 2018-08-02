@@ -94,7 +94,9 @@ export default class SiderMenu extends PureComponent {
       return (
         <a href={itemPath} target={target}>
           {icon}
-          <span>{name}</span>
+          <span>
+            {name}
+          </span>
         </a>
       );
     }
@@ -108,13 +110,15 @@ export default class SiderMenu extends PureComponent {
         onClick={
           isMobile
             ? () => {
-                onCollapse(true);
-              }
+              onCollapse(true);
+            }
             : undefined
         }
       >
         {icon}
-        <span>{name}</span>
+        <span>
+          {name}
+        </span>
       </Link>
     );
   };
@@ -133,7 +137,9 @@ export default class SiderMenu extends PureComponent {
               item.icon ? (
                 <span>
                   {getIcon(item.icon)}
-                  <span>{item.name}</span>
+                  <span>
+                    {item.name}
+                  </span>
                 </span>
               ) : (
                 item.name
@@ -146,9 +152,12 @@ export default class SiderMenu extends PureComponent {
         );
       }
       return null;
-    } else {
-      return <Menu.Item key={item.path}>{this.getMenuItemPath(item)}</Menu.Item>;
     }
+    return (
+      <Menu.Item key={item.path}>
+        {this.getMenuItemPath(item)}
+      </Menu.Item>
+    );
   };
 
   /**
@@ -159,14 +168,15 @@ export default class SiderMenu extends PureComponent {
     if (!menusData) {
       return [];
     }
-    return menusData
-      .filter(item => item.name && !item.hideInMenu)
-      .map(item => {
-        // make dom
-        const ItemDom = this.getSubMenuOrItem(item);
-        return this.checkPermissionItem(item.authority, ItemDom);
-      })
-      .filter(item => item);
+    let data = menusData.filter(item => item.name && !item.hideInMenu);
+    data = data.map(item => {
+      // make dom
+      const ItemDom = this.getSubMenuOrItem(item);
+      return this.checkPermissionItem(item.authority, ItemDom);
+    });
+    data = data.filter(item => item);
+
+    return data;
   };
 
   // Get the currently selected menu
@@ -182,9 +192,8 @@ export default class SiderMenu extends PureComponent {
   conversionPath = path => {
     if (path && path.indexOf('http') === 0) {
       return path;
-    } else {
-      return `/${path || ''}`.replace(/\/+/g, '/');
     }
+    return `/${path || ''}`.replace(/\/+/g, '/');
   };
 
   // permission to check
@@ -197,9 +206,7 @@ export default class SiderMenu extends PureComponent {
     return ItemDom;
   };
 
-  isMainMenu = key => {
-    return this.menus.some(item => key && (item.key === key || item.path === key));
-  };
+  isMainMenu = key => this.menus.some(item => key && (item.key === key || item.path === key));
 
   handleOpenChange = openKeys => {
     const lastOpenKey = openKeys[openKeys.length - 1];
@@ -216,8 +223,8 @@ export default class SiderMenu extends PureComponent {
     const menuProps = collapsed
       ? {}
       : {
-          openKeys,
-        };
+        openKeys,
+      };
     // if pathname can't match, use the nearest parent's key
     let selectedKeys = this.getSelectedMenuKeys();
     if (!selectedKeys.length) {
@@ -236,7 +243,9 @@ export default class SiderMenu extends PureComponent {
         <div className={styles.logo} key="logo">
           <Link to="/">
             <img src={logo} alt="logo" />
-            <h1>Ant Design Pro</h1>
+            <h1>
+Ant Design Pro
+            </h1>
           </Link>
         </div>
         <Menu

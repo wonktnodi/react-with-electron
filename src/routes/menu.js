@@ -25,6 +25,29 @@ const menuData = [
       },
     ],
   },
+  {
+    name: '表单页',
+    icon: 'form',
+    path: 'form',
+    children: [
+      {
+        name: '基础表单',
+        path: 'basic-form',
+        component: 'SecondPage',
+      },
+      {
+        name: '分步表单',
+        path: 'step-form',
+        component: 'SecondPage',
+      },
+      {
+        name: '高级表单',
+        path: 'advanced-form',
+        component: 'SecondPage',
+        authority: 'admin',
+      },
+    ],
+  },
 ];
 
 function formatter(data, parentPath = '/', parentAuthority) {
@@ -47,4 +70,3 @@ function formatter(data, parentPath = '/', parentAuthority) {
 
 export const getMenuData = () => formatter(menuData);
 export default getMenuData;
-

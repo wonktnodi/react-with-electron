@@ -2,8 +2,12 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import unionBy from 'lodash/unionBy';
 
+import Authorized from '../utils/Authorized';
+import { Page404 } from '../components/Exception/pages';
 import { getMenuData } from './menu';
 import AllComponents from './component';
+
+const { AuthorizedRoute, check } = Authorized;
 
 let routerDataCache = null;
 
@@ -71,6 +75,26 @@ export function getRouterData() {
   return routerDataCache;
 }
 
+const getBaseRedirect = (routerData) => {
+  // According to the url parameter to redirect
+  // 这里是重定向的,重定向到 url 的 redirect 参数所示地址
+  const urlParams = new URL(window.location.href);
+
+  const redirect = urlParams.searchParams.get('redirect');
+  // Remove the parameters in the url
+  if (redirect) {
+    urlParams.searchParams.delete('redirect');
+    window.history.replaceState(null, 'redirect', urlParams.href);
+  } else {
+    // get the first authorized route path in routerData
+    const authorizedPath = Object.keys(routerData).find(
+      item => check(routerData[item].authority, item) && item !== '/'
+    );
+    return routerData[authorizedPath].path;
+  }
+  return redirect;
+};
+
 function routesFromMenuData() {
   if (!routerDataCache) {
     routerDataCache = generateRouterData();
@@ -83,22 +107,29 @@ function routesFromMenuData() {
   });
   // return menuRoutes;
   const newData = unionBy(menuRoutes.concat(othersRoutes), 'path');
+  console.log(newData);
+  const bashRedirect = getBaseRedirect(newData);
   return (
     <Switch>
+      {redirectData.map(item => <Redirect key={item.from} exact from={item.from} to={item.to} />)}
       {newData.map(item => {
         let Component = null;
         if (item.component) Component = AllComponents[item.component];
         return Component ? (
-          <Route
+          <AuthorizedRoute
             key={item.path}
             path={item.path}
+            exact={item.exact}
+            authority={item.authority}
             render={props => <Component {...props} routerData={routerDataCache} />}
+            redirectPath="/403"
           />
         ) : (
           undefined
         );
       })}
-      {redirectData.map(item => <Redirect key={item.from} exact from={item.from} to={item.to} />)}
+      <Redirect exact from="/" to={bashRedirect} />
+      <Route render={Page404} />
     </Switch>
   );
 }
