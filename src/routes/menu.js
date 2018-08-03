@@ -31,19 +31,9 @@ const menuData = [
     path: 'form',
     children: [
       {
-        name: '基础表单',
-        path: 'basic-form',
-        component: 'SecondPage',
-      },
-      {
-        name: '分步表单',
-        path: 'step-form',
-        component: 'SecondPage',
-      },
-      {
         name: '高级表单',
         path: 'advanced-form',
-        component: 'SecondPage',
+        component: 'AdvancedForm',
         authority: 'admin',
       },
     ],

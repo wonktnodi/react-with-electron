@@ -65,10 +65,10 @@ const query = {
   },
 };
 
-let isMobile;
-enquireScreen(b => {
-  isMobile = b;
-});
+// let isMobile;
+// enquireScreen(b => {
+//   isMobile = b;
+// });
 
 @connect(
   state => ({ user, global = {} }) => ({
