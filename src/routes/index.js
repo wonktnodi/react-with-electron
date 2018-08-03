@@ -105,9 +105,7 @@ function routesFromMenuData() {
       menuRoutes.push(menusData[key]);
     }
   });
-  // return menuRoutes;
   const newData = unionBy(menuRoutes.concat(othersRoutes), 'path');
-  console.log(newData);
   const bashRedirect = getBaseRedirect(newData);
   return (
     <Switch>

@@ -48,6 +48,23 @@ const menuData = [
       },
     ],
   },
+  {
+    name: '列表页',
+    icon: 'table',
+    path: 'list',
+    children: [
+      {
+        name: '查询表格',
+        path: 'table-list',
+        component: 'TableList',
+      },
+      {
+        name: '标准列表',
+        path: 'basic-list',
+        component: 'BasicList',
+      },
+    ],
+  },
 ];
 
 function formatter(data, parentPath = '/', parentAuthority) {

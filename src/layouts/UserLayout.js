@@ -9,9 +9,9 @@ class UserLayout extends React.PureComponent {
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = 'Ant Design Pro';
+    let title = 'Dashboard';
     if (routerData && routerData[pathname] && routerData[pathname].name) {
-      title = `${routerData[pathname].name} - Ant Design Pro`;
+      title = `${routerData[pathname].name} - ${title}`;
     }
     return title;
   }
@@ -26,12 +26,12 @@ class UserLayout extends React.PureComponent {
                 <Link to="/">
                   <img alt="logo" className={styles.logo} src={logo} />
                   <span className={styles.title}>
-                    {'Moshi dashboard'}
+                    {'Dashboard'}
                   </span>
                 </Link>
               </div>
               <div className={styles.desc}>
-                {'Moshi 管理后台'}
+                {'管理后台'}
               </div>
             </div>
             <Switch>

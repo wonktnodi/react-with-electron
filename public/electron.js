@@ -52,7 +52,7 @@ async function createWindow() {
   mainWindow.loadURL(startUrl);
 
   app.setAboutPanelOptions({
-    applicationName: 'Moshi Dash',
+    applicationName: 'Dashboard',
     applicationVersion: '0.0.1.1122'
   });
 

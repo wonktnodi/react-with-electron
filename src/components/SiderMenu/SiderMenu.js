@@ -244,7 +244,7 @@ export default class SiderMenu extends PureComponent {
           <Link to="/">
             <img src={logo} alt="logo" />
             <h1>
-Ant Design Pro
+              Dashboard
             </h1>
           </Link>
         </div>

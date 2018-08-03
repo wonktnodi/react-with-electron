@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { Layout } from 'antd';
 import PropTypes from 'prop-types';
 import pathToRegexp from 'path-to-regexp';
+import classNames from 'classnames';
+import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
-
+import { enquireScreen, unenquireScreen } from 'enquire-js';
+import { ContainerQuery } from 'react-container-query';
 import { push } from 'connected-react-router';
 import { bindActionCreators } from 'redux';
 import Authorized from '../../utils/Authorized';
@@ -37,6 +40,36 @@ const getBreadcrumbNameMap = (menuData, routerData) => {
   return Object.assign({}, routerData, result, childResult);
 };
 
+const query = {
+  'screen-xs': {
+    maxWidth: 575,
+  },
+  'screen-sm': {
+    minWidth: 576,
+    maxWidth: 767,
+  },
+  'screen-md': {
+    minWidth: 768,
+    maxWidth: 991,
+  },
+  'screen-lg': {
+    minWidth: 992,
+    maxWidth: 1199,
+  },
+  'screen-xl': {
+    minWidth: 1200,
+    maxWidth: 1599,
+  },
+  'screen-xxl': {
+    minWidth: 1600,
+  },
+};
+
+let isMobile;
+enquireScreen(b => {
+  isMobile = b;
+});
+
 @connect(
   state => ({ user, global = {} }) => ({
     collapsed: global.collapsed,
@@ -64,6 +97,18 @@ class App extends Component {
     };
   }
 
+  componentDidMount() {
+    this.enquireHandler = enquireScreen(mobile => {
+      this.setState({
+        isMobile: mobile,
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    unenquireScreen(this.enquireHandler);
+  }
+
   handleMenuCollapse = collapsed => {
     // const { dispatch } = this.props;
     changeLayoutCollapse(collapsed);
@@ -86,7 +131,7 @@ class App extends Component {
   getPageTitle = () => {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = 'Ant Design Pro';
+    let title = 'Dashboard';
     let currRouterData = null;
     // match params path
     Object.keys(routerData).forEach(key => {
@@ -95,7 +140,7 @@ class App extends Component {
       }
     });
     if (currRouterData && currRouterData.name) {
-      title = `${currRouterData.name} - Ant Design Pro`;
+      title = `${currRouterData.name} - ${title}`;
     }
     return title;
   };
@@ -111,7 +156,7 @@ class App extends Component {
       location,
     } = this.props;
     const { collapsed, isMobile: mb } = this.state;
-    return (
+    const layout = (
       <Layout>
         <SiderMenu
           logo={logo}
@@ -145,6 +190,17 @@ class App extends Component {
           </Content>
         </Layout>
       </Layout>
+    );
+    return (
+      <DocumentTitle title={this.getPageTitle()}>
+        <ContainerQuery query={query}>
+          {params => (
+            <div className={classNames(params)}>
+              {layout}
+            </div>
+          )}
+        </ContainerQuery>
+      </DocumentTitle>
     );
   }
 }
