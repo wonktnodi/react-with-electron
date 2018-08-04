@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import FooterToolbar from '../../components/FooterToolbar';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import TableForm from './TableForm';
+import TableForm from '../../components/TableForm';
 import styles from './style.module.less';
 
 const { Option } = Select;
