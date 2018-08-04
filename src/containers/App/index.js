@@ -29,14 +29,23 @@ const { Header, Content } = Layout;
 const getBreadcrumbNameMap = (menuData, routerData) => {
   const result = {};
   const childResult = {};
-  for (const i of menuData) {
+
+  menuData.forEach(i=>{
     if (!routerData[i.path]) {
       result[i.path] = i;
     }
     if (i.children) {
       Object.assign(childResult, getBreadcrumbNameMap(i.children, routerData));
     }
-  }
+  });
+  // for (const i of menuData) {
+  //   if (!routerData[i.path]) {
+  //     result[i.path] = i;
+  //   }
+  //   if (i.children) {
+  //     Object.assign(childResult, getBreadcrumbNameMap(i.children, routerData));
+  //   }
+  // }
   return Object.assign({}, routerData, result, childResult);
 };
 
@@ -65,13 +74,13 @@ const query = {
   },
 };
 
-// let isMobile;
-// enquireScreen(b => {
-//   isMobile = b;
-// });
+let isMobile;
+enquireScreen(b => {
+  isMobile = b;
+});
 
 @connect(
-  state => ({ user, global = {} }) => ({
+  (/* state */) => ({ user, global = {} }) => ({
     collapsed: global.collapsed,
     currentUser: user.currentUser,
   }),
@@ -85,7 +94,7 @@ class App extends Component {
 
   state = {
     collapsed: false,
-    isMobile: false,
+    isMobile,
   };
 
   getChildContext() {
@@ -109,25 +118,6 @@ class App extends Component {
     unenquireScreen(this.enquireHandler);
   }
 
-  handleMenuCollapse = collapsed => {
-    // const { dispatch } = this.props;
-    changeLayoutCollapse(collapsed);
-    this.setState({
-      collapsed,
-    });
-  };
-
-  handleMenuClick = ({ key }) => {
-    const { dispatch } = this.props;
-    if (key === 'triggerError') {
-      dispatch(push('/exception/trigger'));
-      return;
-    }
-    if (key === 'logout') {
-      this.props.userLogout();
-    }
-  };
-
   getPageTitle = () => {
     const { routerData, location } = this.props;
     const { pathname } = location;
@@ -143,6 +133,25 @@ class App extends Component {
       title = `${currRouterData.name} - ${title}`;
     }
     return title;
+  };
+
+  handleMenuCollapse = collapsed => {
+    // const { dispatch } = this.props;
+    changeLayoutCollapse(collapsed);
+    this.setState({
+      collapsed,
+    });
+  };
+
+  handleMenuClick = ({ key }) => {
+    const { userLogout: funcLogout, dispatch } = this.props;
+    if (key === 'triggerError') {
+      dispatch(push('/exception/trigger'));
+      return;
+    }
+    if (key === 'logout') {
+      funcLogout();
+    }
   };
 
   render() {
@@ -185,21 +194,13 @@ class App extends Component {
               // onNoticeVisibleChange={this.handleNoticeVisibleChange}
             />
           </Header>
-          <Content style={{ margin: '24px 24px 0', height: '100%' }}>
-            {generateRoutes(match.path)}
-          </Content>
+          <Content style={{ margin: '24px 24px 0', height: '100%' }}>{generateRoutes(match.path)}</Content>
         </Layout>
       </Layout>
     );
     return (
       <DocumentTitle title={this.getPageTitle()}>
-        <ContainerQuery query={query}>
-          {params => (
-            <div className={classNames(params)}>
-              {layout}
-            </div>
-          )}
-        </ContainerQuery>
+        <ContainerQuery query={query}>{params => <div className={classNames(params)}>{layout}</div>}</ContainerQuery>
       </DocumentTitle>
     );
   }

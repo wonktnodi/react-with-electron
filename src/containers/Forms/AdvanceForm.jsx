@@ -52,7 +52,45 @@ const tableData = [
   },
 ];
 
-@connect(({ global, loading }) => ({
+const columnsTable = [
+  {
+    title: '成员姓名',
+    dataIndex: 'name',
+    key: 'name',
+    width: '20%',
+    placeholder: '成员姓名',
+  },
+  {
+    title: '工号',
+    dataIndex: 'workId',
+    key: 'workId',
+    width: '20%',
+    placeholder: '工号',
+  },
+  {
+    title: '所属部门',
+    dataIndex: 'department',
+    key: 'department',
+    width: '40%',
+    placeholder: '所属部门',
+  },
+];
+
+const validateTableData = target => {
+  if (!target.workId || !target.name || !target.department) {
+    // message.error('请填写完整成员信息。');
+    return false;
+  }
+
+  return true;
+};
+
+const saveTableData = (e, target, afterAction) => {
+  setTimeout(() => {
+    afterAction(e, target);
+  }, 500);
+};
+@connect(({ global }) => ({
   collapsed: global.collapsed,
   // submitting: loading.effects['form/submitAdvancedForm'],
 }))
@@ -215,7 +253,16 @@ class AdvancedForm extends PureComponent {
         <Card title="成员管理" bordered={false}>
           {getFieldDecorator('members', {
             initialValue: tableData,
-          })(<TableForm initailValue={initialTabRowValue} />)}
+          })(
+            <TableForm
+              initailValue={initialTabRowValue}
+              columns={columnsTable}
+              validateMsg="请填写完整成员信息。"
+              dataValidator={validateTableData}
+              onDataSave={saveTableData}
+              addBtnTxt='新增成员'
+            />
+          )}
         </Card>
         <Card title="任务管理" className={styles.card} bordered={false}>
           <Form layout="vertical" hideRequiredMark>
