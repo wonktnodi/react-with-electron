@@ -13,6 +13,7 @@ export default class TableForm extends PureComponent {
     this.state = {
       data: props.value,
       loading: false,
+      editing: false,
     };
   }
 
@@ -33,6 +34,16 @@ export default class TableForm extends PureComponent {
     e.preventDefault();
     const { data } = this.state;
     const newData = data.map(item => ({ ...item }));
+    let editingKey = null;
+    newData.forEach(element => {
+      if (element.editable === true) editingKey = element.key;
+    });
+
+    if (editingKey && editingKey !== key) {
+      message.warn('请确认正在编辑的内容');
+      return;
+    }
+
     const target = this.getRowByKey(key, newData);
     if (target) {
       // 进入编辑状态时保存原始数据
@@ -40,7 +51,7 @@ export default class TableForm extends PureComponent {
         this.cacheOriginData[key] = { ...target };
       }
       target.editable = !target.editable;
-      this.setState({ data: newData });
+      this.setState({ data: newData, editing: target.editable });
     }
   };
 
@@ -55,14 +66,14 @@ export default class TableForm extends PureComponent {
       ...initailValue,
     });
     this.index += 1;
-    this.setState({ data: newData });
+    this.setState({ data: newData, editing: true });
   };
 
   remove(key) {
     const { data } = this.state;
     const { onChange } = this.props;
     const newData = data.filter(item => item.key !== key);
-    this.setState({ data: newData });
+    this.setState({ data: newData, editing: false });
     onChange(newData);
   }
 
@@ -109,6 +120,7 @@ export default class TableForm extends PureComponent {
       onChange(data);
       this.setState({
         loading: false,
+        editing: false,
       });
     }, 500);
   }
@@ -124,7 +136,7 @@ export default class TableForm extends PureComponent {
       target.editable = false;
       delete this.cacheOriginData[key];
     }
-    this.setState({ data: newData });
+    this.setState({ data: newData, editing: false});
     this.clickedCancel = false;
   }
 
@@ -202,8 +214,8 @@ export default class TableForm extends PureComponent {
                 <span>
                   <a onClick={e => this.saveRow(e, record.key)}>添加</a>
                   <Divider type="vertical" />
-                  <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.key)}>
-                    <a>删除</a>
+                  <Popconfirm title="是否要取消添加？" onConfirm={() => this.remove(record.key)}>
+                    <a>取消</a>
                   </Popconfirm>
                 </span>
               );
@@ -229,7 +241,7 @@ export default class TableForm extends PureComponent {
       },
     ];
 
-    const { loading, data } = this.state;
+    const { loading, data, editing } = this.state;
 
     return (
       <Fragment>
@@ -245,6 +257,7 @@ export default class TableForm extends PureComponent {
           type="dashed"
           onClick={this.newMember}
           icon="plus"
+          disabled={editing}
         >
           新增成员
         </Button>

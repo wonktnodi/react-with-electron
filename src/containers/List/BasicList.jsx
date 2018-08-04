@@ -24,7 +24,7 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const { Search } = Input;
 
-@connect(({ list, loading }) => ({
+@connect(({ list }) => ({
   list,
   // loading: loading.models.list,
 }))
@@ -165,7 +165,7 @@ Owner
               pagination={paginationProps}
               dataSource={list}
               renderItem={item => (
-                <List.Item actions={[<a>{'编辑'}</a>, <MoreBtn />]}>
+                <List.Item actions={[<a>编辑</a>, <MoreBtn />]}>
                   <List.Item.Meta
                     avatar={<Avatar src={item.logo} shape="square" size="large" />}
                     title={(
