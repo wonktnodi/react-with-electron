@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Checkbox, Alert } from 'antd';
-// import { push } from 'connected-react-router';
+import * as types from '../../actions/types';
+
 import Login from '../../components/Login';
 import styles from './Login.module.less';
 
@@ -11,7 +12,7 @@ import { userLogin } from '../../actions';
 const { Tab, UserName, Password, Submit } = Login;
 
 @connect(
-  ({ login, loading }) => ({ login, submitting: loading.effects['login/login'] }),
+  ({ login, loading }) => ({ login, submitting: loading.effects[types.USER_LOGIN] }),
   dispatch => bindActionCreators({ userLogin }, dispatch)
 )
 export default class LoginPage extends Component {
@@ -26,8 +27,9 @@ export default class LoginPage extends Component {
 
   handleSubmit = (err, values) => {
     const { type } = this.state;
+    const { userLogin: funcLogin } = this.props;
     if (!err) {
-      this.props.userLogin(values.userName, values.password, type);
+      funcLogin(values.userName, values.password, type);
     }
   };
 
@@ -37,9 +39,7 @@ export default class LoginPage extends Component {
     });
   };
 
-  renderMessage = content => (
-    <Alert style={{ marginBottom: 24 }} message={content} closable type="error" showIcon />
-  );
+  renderMessage = content => <Alert style={{ marginBottom: 24 }} message={content} closable type="error" showIcon />;
 
   render() {
     const { login, submitting } = this.props;
@@ -48,10 +48,7 @@ export default class LoginPage extends Component {
       <div className={styles.main}>
         <Login defaultActiveKey={type} onTabChange={this.onTabChange} onSubmit={this.handleSubmit}>
           <Tab key="account" tab="账户密码登录">
-            {login.status !== 200 &&
-              login.type === 'account' &&
-              !submitting &&
-              this.renderMessage('账户或密码错误')}
+            {login.status !== 200 && login.type === 'account' && !submitting && this.renderMessage('账户或密码错误')}
             <UserName name="userName" placeholder="admin/user" />
             <Password name="password" placeholder="888888/123456" />
           </Tab>
@@ -63,9 +60,7 @@ export default class LoginPage extends Component {
               忘记密码
             </a>
           </div>
-          <Submit loading={submitting}>
-            {'登录'}
-          </Submit>
+          <Submit loading={submitting}>登录</Submit>
         </Login>
       </div>
     );

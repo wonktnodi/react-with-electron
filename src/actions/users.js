@@ -4,21 +4,14 @@ import userApi from '../api/users';
 import { reloadAuthorized } from '../utils/Authorized';
 import { roleToAuthority } from '../utils/authority';
 
-export const internalLogin = async data => {
+const internalLogin = async data => {
   const { type } = data;
   const resp = await userApi.login(data);
-  // console.log('user login1:', resp);
-  // // dispatch({
-  // //   type: types.USER_CHANGE_LOGIN_STATUS,
-  // //   payload: resp.data,
-  // // });
-  // const resp1 = await userApi.login(data);
-  // console.log('user login2:', resp1);
   resp.data.type = type;
   return resp;
 };
 
-export const process = ({ data, dispatch }) => {
+const loginProcess = ({ data, dispatch }) => {
   if (data.error) {
     dispatch({
       type: types.USER_LOGIN,
@@ -42,8 +35,8 @@ export const process = ({ data, dispatch }) => {
 
 const logout = ({ dispatch }) => {
   try {
-    const urlParams = new URL(window.location.href);
-    console.log(urlParams);
+    // const urlParams = new URL(window.location.href);
+    // console.log(urlParams);
     //     const pathname = yield select(state => state.routing.location.pathname);
     //     // add the parameters in the url
     //     urlParams.searchParams.set('redirect', pathname);
@@ -54,6 +47,7 @@ const logout = ({ dispatch }) => {
       payload: { status: 200, type: 'account', currentAuthority: 'guest' },
     });
     reloadAuthorized();
+    // redirect to login page.
     dispatch(push('/user/login'));
   }
 };
@@ -61,7 +55,7 @@ const logout = ({ dispatch }) => {
 export default {
   login: {
     action: internalLogin,
-    process,
+    process: loginProcess,
   },
   logout: {
     action: logout,

@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Row,
   Col,
@@ -20,8 +21,12 @@ import {
   Divider,
 } from 'antd';
 
+import * as types from '../../actions/types';
+
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import StandardTable from '../../components/StandardTable';
+import listApi from '../../api/lists';
+import { getListsData } from '../../actions';
 
 import styles from './TableList.module.less';
 
@@ -33,7 +38,6 @@ const getValue = obj =>
     .join(',');
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
-// const stylePadding = { padding: '4px, 0, 4px, 0' };
 const styleFormItem = { display: 'flex' };
 
 const CreateForm = Form.create()(props => {
@@ -46,12 +50,7 @@ const CreateForm = Form.create()(props => {
     });
   };
   return (
-    <Modal
-      title="新建规则"
-      visible={modalVisible}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
+    <Modal title="新建规则" visible={modalVisible} onOk={okHandle} onCancel={() => handleModalVisible()}>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
         {form.getFieldDecorator('desc', {
           rules: [{ required: true, message: 'Please input some description...' }],
@@ -61,9 +60,10 @@ const CreateForm = Form.create()(props => {
   );
 });
 
-@connect(({ list, loading }) => ({
-  // list,
-}))
+@connect(
+  ({ list, loading }) => ({ loading: loading.effects[types.LIST_DATA_FETCH] }), // eslint-disable-line
+  dispatch => bindActionCreators({ getListsData }, dispatch)
+)
 @Form.create()
 export default class TableList extends PureComponent {
   state = {
@@ -77,9 +77,31 @@ export default class TableList extends PureComponent {
     },
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.sendQuery({ currentPage: 1, pageSize: 10, no: 1 });
+  }
 
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {};
+  handleStandardTableChange = (pagination, filtersArg, sorter) => {
+    const { formValues } = this.state;
+
+    const filters = Object.keys(filtersArg).reduce((obj, key) => {
+      const newObj = { ...obj };
+      newObj[key] = getValue(filtersArg[key]);
+      return newObj;
+    }, {});
+
+    const params = {
+      currentPage: pagination.current,
+      pageSize: pagination.pageSize,
+      ...formValues,
+      ...filters,
+    };
+    if (sorter.field) {
+      params.sorter = `${sorter.field}_${sorter.order}`;
+    }
+
+    this.sendQuery(params);
+  };
 
   handleFormReset = () => {
     const { form } = this.props;
@@ -96,7 +118,30 @@ export default class TableList extends PureComponent {
     });
   };
 
-  handleMenuClick = e => {};
+  handleMenuClick = e => {
+    // const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+
+    if (!selectedRows) return;
+
+    switch (e.key) {
+    case 'remove':
+      // dispatch({
+      //   type: 'rule/remove',
+      //   payload: {
+      //     no: selectedRows.map(row => row.no).join(','),
+      //   },
+      //   callback: () => {
+      //     this.setState({
+      //       selectedRows: [],
+      //     });
+      //   },
+      // });
+      break;
+    default:
+      break;
+    }
+  };
 
   handleSelectRows = rows => {
     this.setState({
@@ -104,8 +149,33 @@ export default class TableList extends PureComponent {
     });
   };
 
+  afterListDataFetched = data => {
+    this.setState({ data: data.data });
+  };
+
+  sendQuery = params => {
+    const { getListsData: apiFunc } = this.props;
+
+    apiFunc(params, this.afterListDataFetched);
+  };
+
   handleSearch = e => {
+    const { form } = this.props;
     e.preventDefault();
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+
+      const values = {
+        ...fieldsValue,
+        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+      };
+
+      this.setState({
+        formValues: values,
+      });
+
+      this.sendQuery({ currentPage: 1, pageSize: 10, no: 1 });
+    });
   };
 
   handleModalVisible = flag => {
@@ -144,12 +214,8 @@ export default class TableList extends PureComponent {
             <FormItem label="使用状态" style={styleFormItem}>
               {getFieldDecorator('status')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">
-                    {'关闭'}
-                  </Option>
-                  <Option value="1">
-运行中
-                  </Option>
+                  <Option value="0">关闭</Option>
+                  <Option value="1">运行中</Option>
                 </Select>
               )}
             </FormItem>
@@ -163,9 +229,7 @@ export default class TableList extends PureComponent {
                 重置
               </Button>
               <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                展开
-                {' '}
-                <Icon type="down" />
+                展开 <Icon type="down" />
               </a>
             </span>
           </Col>
@@ -189,12 +253,8 @@ export default class TableList extends PureComponent {
             <FormItem label="使用状态" style={styleFormItem}>
               {getFieldDecorator('status')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">
-关闭
-                  </Option>
-                  <Option value="1">
-运行中
-                  </Option>
+                  <Option value="0">关闭</Option>
+                  <Option value="1">运行中</Option>
                 </Select>
               )}
             </FormItem>
@@ -208,21 +268,15 @@ export default class TableList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="更新日期" style={styleFormItem}>
-              {getFieldDecorator('date')(
-                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />
-              )}
+              {getFieldDecorator('date')(<DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="使用状态" style={styleFormItem}>
               {getFieldDecorator('status3')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">
-关闭
-                  </Option>
-                  <Option value="1">
-运行中
-                  </Option>
+                  <Option value="0">关闭</Option>
+                  <Option value="1">运行中</Option>
                 </Select>
               )}
             </FormItem>
@@ -231,12 +285,8 @@ export default class TableList extends PureComponent {
             <FormItem label="使用状态" style={styleFormItem}>
               {getFieldDecorator('status4')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">
-关闭
-                  </Option>
-                  <Option value="1">
-运行中
-                  </Option>
+                  <Option value="0">关闭</Option>
+                  <Option value="1">运行中</Option>
                 </Select>
               )}
             </FormItem>
@@ -251,9 +301,7 @@ export default class TableList extends PureComponent {
               重置
             </Button>
             <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起
-              {' '}
-              <Icon type="up" />
+              收起 <Icon type="up" />
             </a>
           </span>
         </div>
@@ -267,8 +315,8 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const { selectedRows, modalVisible } = this.state;
-    const { data } = this.state;
+    const { loading } = this.props;
+    const { data, selectedRows, modalVisible } = this.state;
     const columns = [
       {
         title: '规则编号',
@@ -317,23 +365,15 @@ export default class TableList extends PureComponent {
         title: '更新时间',
         dataIndex: 'updatedAt',
         sorter: true,
-        render: val => (
-          <span>
-            {moment(val).format('YYYY-MM-DD HH:mm:ss')}
-          </span>
-        ),
+        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
       {
         title: '操作',
         render: () => (
           <Fragment>
-            <a href="">
-配置
-            </a>
+            <a href="">配置</a>
             <Divider type="vertical" />
-            <a href="">
-订阅警报
-            </a>
+            <a href="">订阅警报</a>
           </Fragment>
         ),
       },
@@ -341,12 +381,8 @@ export default class TableList extends PureComponent {
 
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">
-删除
-        </Menu.Item>
-        <Menu.Item key="approval">
-批量审批
-        </Menu.Item>
+        <Menu.Item key="remove">删除</Menu.Item>
+        <Menu.Item key="approval">批量审批</Menu.Item>
       </Menu>
     );
 
@@ -368,14 +404,10 @@ export default class TableList extends PureComponent {
               </Button>
               {selectedRows.length > 0 && (
                 <span>
-                  <Button>
-批量操作
-                  </Button>
+                  <Button>批量操作</Button>
                   <Dropdown overlay={menu}>
                     <Button>
-                      更多操作
-                      {' '}
-                      <Icon type="down" />
+                      更多操作 <Icon type="down" />
                     </Button>
                   </Dropdown>
                 </span>
@@ -383,8 +415,8 @@ export default class TableList extends PureComponent {
             </div>
             <StandardTable
               selectedRows={selectedRows}
-              // loading={true}
-              data={data}
+              loading={loading}
+              data={data || {}}
               columns={columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}

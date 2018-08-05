@@ -1,14 +1,19 @@
 import * as types from './types';
-import { fetchData, doAction } from './common';
+import { doAsyncAction, doAction, callApi } from './common';
 
 export const userLogin = (username, password, type) => {
   const stateName = types.USER_LOGIN;
-  return fetchData(stateName, { username, password, type });
+  return doAsyncAction(stateName, { username, password, type });
 };
 
 export const userLogout = () => {
   const stateName = types.USER_LOGOUT;
   return doAction(stateName);
+};
+
+export const getListsData = (params, callback) => {
+  const stateName = types.LIST_DATA_FETCH;
+  return callApi(stateName, params, callback);
 };
 
 // export const userLogout = () => dispatch => {
