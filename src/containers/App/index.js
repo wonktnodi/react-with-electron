@@ -16,7 +16,7 @@ import GlobalHeader from '../../components/GlobalHeader';
 import { generateRoutes } from '../../routes';
 import { getMenuData } from '../../routes/menu';
 
-import { userLogout, changeLayoutCollapse } from '../../actions';
+import { userLogout, changeLayoutCollapse, userStatus } from '../../actions';
 import logo from '../../assets/logo.svg';
 
 const { Header, Content } = Layout;
@@ -30,7 +30,7 @@ const getBreadcrumbNameMap = (menuData, routerData) => {
   const result = {};
   const childResult = {};
 
-  menuData.forEach(i=>{
+  menuData.forEach(i => {
     if (!routerData[i.path]) {
       result[i.path] = i;
     }
@@ -38,14 +38,6 @@ const getBreadcrumbNameMap = (menuData, routerData) => {
       Object.assign(childResult, getBreadcrumbNameMap(i.children, routerData));
     }
   });
-  // for (const i of menuData) {
-  //   if (!routerData[i.path]) {
-  //     result[i.path] = i;
-  //   }
-  //   if (i.children) {
-  //     Object.assign(childResult, getBreadcrumbNameMap(i.children, routerData));
-  //   }
-  // }
   return Object.assign({}, routerData, result, childResult);
 };
 
@@ -84,7 +76,7 @@ enquireScreen(b => {
     collapsed: global.collapsed,
     currentUser: user.currentUser,
   }),
-  dispatch => bindActionCreators({ userLogout }, dispatch)
+  dispatch => bindActionCreators({ userLogout, userStatus }, dispatch)
 )
 class App extends Component {
   static childContextTypes = {
@@ -112,6 +104,8 @@ class App extends Component {
         isMobile: mobile,
       });
     });
+    const {userStatus: funcStatus} = this.props;
+    funcStatus();
   }
 
   componentWillUnmount() {

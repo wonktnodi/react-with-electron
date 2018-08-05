@@ -16,6 +16,10 @@ export const getListsData = (params, callback) => {
   return callApi(stateName, params, callback);
 };
 
+export const userStatus = () => {
+  const stateName = types.USER_STATUS;
+  return doAsyncAction(stateName);
+};
 // export const userLogout = () => dispatch => {
 //   try {
 //     const urlParams = new URL(window.location.href);

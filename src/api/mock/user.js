@@ -11,7 +11,7 @@ const adminUser = {
 const normalUser = {
   headImg: 'https://randomuser.me/api/portraits/women/50.jpg',
   nickName: 'Teresa Ramos',
-  userId: 3,
+  userId: 4,
   role: 1,
 };
 
@@ -38,9 +38,10 @@ export default mock => {
     return [401];
   });
 
-  mock.onGet('/users/status').reply(config => {
-    const data = JSON.parse(config.data);
+  mock.onGet('/users/status').reply(() => {
+    // const data = JSON.parse(config.data);
     console.log(userId);
-    return [200, data];
+    if (userId === 3) return [200, adminUser];
+    return [200, normalUser];
   });
 };

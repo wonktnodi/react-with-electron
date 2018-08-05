@@ -7,5 +7,6 @@ import lists from './lists';
 export default {
   [types.USER_LOGIN]: users.login,
   [types.USER_LOGOUT]: users.logout,
+  [types.USER_STATUS]: users.status,
   [types.LIST_DATA_FETCH]: lists.fetchList,
 };

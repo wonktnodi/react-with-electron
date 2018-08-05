@@ -125,7 +125,7 @@ function postRule(req, res, u, b) {  // eslint-disable-line
 export default mock => {
   if (!mock) return;
 
-  mock.onGet('/lists').reply(config => {
+  mock.onGet('/lists').reply(config => {  // eslint-disable-line
     // console.log(config);
     return [200, getRule(config.params)];
   });

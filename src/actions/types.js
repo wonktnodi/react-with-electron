@@ -11,6 +11,7 @@ export const LOADING_HIDE = 'loading/hide';
 export const USER_LOGIN = 'login/login';
 export const USER_LOGOUT = 'login/logout';
 export const USER_SAVE_INFO = 'login/saveInfo';
+export const USER_STATUS = 'users/status';
 export const USER_CHANGE_LOGIN_STATUS = 'login/changeLoginStatus';
 
 // list data

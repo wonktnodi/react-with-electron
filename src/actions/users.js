@@ -52,6 +52,32 @@ const logout = ({ dispatch }) => {
   }
 };
 
+const userStatus= async () => {
+  const resp = await userApi.status();
+  return resp;
+};
+
+const userStatusProcess = ({ data, dispatch }) => {
+  if (data.error) {
+    // dispatch({
+    //   type: types.USER_LOGIN,
+    //   payload: { error: data.error, data: data.data },
+    // });
+    return;
+  }
+
+  dispatch({
+    type: types.USER_CHANGE_LOGIN_STATUS,
+    payload: { status: 200, currentAuthority: roleToAuthority(data.data.role) },
+  });
+
+  dispatch({
+    type: types.USER_SAVE_INFO,
+    payload: data.data,
+  });
+  reloadAuthorized();
+};
+
 export default {
   login: {
     action: internalLogin,
@@ -60,4 +86,8 @@ export default {
   logout: {
     action: logout,
   },
+  status: {
+    action: userStatus,
+    process: userStatusProcess,
+  }
 };
