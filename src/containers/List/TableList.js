@@ -25,7 +25,6 @@ import * as types from '../../actions/types';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import StandardTable from '../../components/StandardTable';
-import listApi from '../../api/lists';
 import { getListsData } from '../../actions';
 
 import styles from './TableList.module.less';
@@ -39,6 +38,7 @@ const getValue = obj =>
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 const styleFormItem = { display: 'flex' };
+const styleFormCol = {padding:'4px 0 4px 0'};
 
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
@@ -78,7 +78,7 @@ export default class TableList extends PureComponent {
   };
 
   componentDidMount() {
-    this.sendQuery({ currentPage: 1, pageSize: 10, no: 1 });
+    this.sendQuery();
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -174,7 +174,7 @@ export default class TableList extends PureComponent {
         formValues: values,
       });
 
-      this.sendQuery({ currentPage: 1, pageSize: 10, no: 1 });
+      this.sendQuery(values);
     });
   };
 
@@ -184,7 +184,7 @@ export default class TableList extends PureComponent {
     });
   };
 
-  handleAdd = fields => {
+  handleAdd = fields => {  // eslint-disable-line
     // const { dispatch } = this.props;
     // dispatch({
     //   type: 'rule/add',
@@ -205,12 +205,12 @@ export default class TableList extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
+          <Col md={8} sm={24} style={styleFormCol}>
             <FormItem label="规则编号" style={styleFormItem}>
               {getFieldDecorator('no')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
+          <Col md={8} sm={24} style={styleFormCol}>
             <FormItem label="使用状态" style={styleFormItem}>
               {getFieldDecorator('status')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
@@ -220,7 +220,7 @@ export default class TableList extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
+          <Col md={8} sm={24} style={styleFormCol}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询

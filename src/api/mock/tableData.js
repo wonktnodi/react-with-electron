@@ -126,7 +126,7 @@ export default mock => {
   if (!mock) return;
 
   mock.onGet('/lists').reply(config => {
-    console.log(config);
+    // console.log(config);
     return [200, getRule(config.params)];
   });
 };
