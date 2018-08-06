@@ -9,4 +9,5 @@ export default {
   [types.USER_LOGOUT]: users.logout,
   [types.USER_STATUS]: users.status,
   [types.LIST_DATA_FETCH]: lists.fetchList,
+  [types.LIST_DATA_BASICS]: lists.fetchBasic,
 };

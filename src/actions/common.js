@@ -35,7 +35,7 @@ export const doAsyncAction = (stateName, data) => async dispatch => {
   }
   try {
     dispatch(requestData(stateName));
-    const resp = await executor.action({ ...data, dispatch });
+    const resp = await executor.action({ ...data});
     dispatch(receiveData(stateName));
 
     if (executor.process) {
@@ -57,7 +57,7 @@ export const callApi = (stateName, data, callback) => dispatch => {
   }
   try {
     dispatch(requestData(stateName));
-    const resp = executor.action({ ...data, dispatch });
+    const resp = executor.action({ ...data });
     console.log(resp);
     resp
       .then(res => {

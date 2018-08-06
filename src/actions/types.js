@@ -16,3 +16,4 @@ export const USER_CHANGE_LOGIN_STATUS = 'login/changeLoginStatus';
 
 // list data
 export const LIST_DATA_FETCH = 'list/fetch';
+export const LIST_DATA_BASICS = 'list/basics';

@@ -1,39 +1,31 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import {
-  List,
-  Card,
-  Row,
-  Col,
-  Radio,
-  Input,
-  Progress,
-  Button,
-  Icon,
-  Dropdown,
-  Menu,
-  Avatar,
-} from 'antd';
+import { bindActionCreators } from 'redux';
+
+import { List, Card, Row, Col, Radio, Input, Progress, Button, Icon, Dropdown, Menu, Avatar } from 'antd';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
+import { getListBasics } from '../../actions';
+import * as types from '../../actions/types';
 import styles from './BasicList.module.less';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const { Search } = Input;
 
-@connect(({ list }) => ({
-  list,
-  // loading: loading.models.list,
-}))
+@connect(
+  ({ loading }) => ({ loading: loading.effects[types.LIST_DATA_BASICS] }),
+  dispatch => bindActionCreators({ getListBasics }, dispatch)
+)
 export default class BasicList extends PureComponent {
   state = {
     list: [],
   };
 
   componentDidMount() {
+    this.fetchData();
     // const { dispatch } = this.props;
     // dispatch({
     //   type: 'list/fetch',
@@ -43,16 +35,24 @@ export default class BasicList extends PureComponent {
     // });
   }
 
+  fetchData = () => {
+    const { getListBasics: apiFunc } = this.props;
+
+    apiFunc({}, this.afterListDataFetched);
+  };
+
+  afterListDataFetched = data => {
+    console.log(data.data);
+    this.setState({ list: data.data.list });
+  };
+
   render() {
+    const { loading } = this.props;
     const { list } = this.state;
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
-        <span>
-          {title}
-        </span>
-        <p>
-          {value}
-        </p>
+        <span>{title}</span>
+        <p>{value}</p>
         {bordered && <em />}
       </div>
     );
@@ -60,15 +60,9 @@ export default class BasicList extends PureComponent {
     const extraContent = (
       <div className={styles.extraContent}>
         <RadioGroup defaultValue="all">
-          <RadioButton value="all">
-全部
-          </RadioButton>
-          <RadioButton value="progress">
-进行中
-          </RadioButton>
-          <RadioButton value="waiting">
-等待中
-          </RadioButton>
+          <RadioButton value="all">全部</RadioButton>
+          <RadioButton value="progress">进行中</RadioButton>
+          <RadioButton value="waiting">等待中</RadioButton>
         </RadioGroup>
         <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
       </div>
@@ -84,20 +78,12 @@ export default class BasicList extends PureComponent {
     const ListContent = ({ data: { owner, createdAt, percent, status } }) => (
       <div className={styles.listContent}>
         <div className={styles.listContentItem}>
-          <span>
-Owner
-          </span>
-          <p>
-            {owner}
-          </p>
+          <span>Owner</span>
+          <p>{owner}</p>
         </div>
         <div className={styles.listContentItem}>
-          <span>
-开始时间
-          </span>
-          <p>
-            {moment(createdAt).format('YYYY-MM-DD HH:mm')}
-          </p>
+          <span>开始时间</span>
+          <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
         </div>
         <div className={styles.listContentItem}>
           <Progress percent={percent} status={status} strokeWidth={6} style={{ width: 180 }} />
@@ -108,14 +94,10 @@ Owner
     const menu = (
       <Menu>
         <Menu.Item>
-          <a>
-编辑
-          </a>
+          <a>编辑</a>
         </Menu.Item>
         <Menu.Item>
-          <a>
-删除
-          </a>
+          <a>删除</a>
         </Menu.Item>
       </Menu>
     );
@@ -123,9 +105,7 @@ Owner
     const MoreBtn = () => (
       <Dropdown overlay={menu}>
         <a>
-          更多
-          {' '}
-          <Icon type="down" />
+          更多 <Icon type="down" />
         </a>
       </Dropdown>
     );
@@ -161,18 +141,14 @@ Owner
             <List
               size="large"
               rowKey="id"
-              // loading={loading}
+              loading={loading}
               pagination={paginationProps}
               dataSource={list}
               renderItem={item => (
                 <List.Item actions={[<a>编辑</a>, <MoreBtn />]}>
                   <List.Item.Meta
                     avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                    title={(
-                      <a href={item.href}>
-                        {item.title}
-                      </a>
-                    )}
+                    title={<a href={item.href}>{item.title}</a>}
                     description={item.subDescription}
                   />
                   <ListContent data={item} />

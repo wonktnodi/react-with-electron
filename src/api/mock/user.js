@@ -40,7 +40,6 @@ export default mock => {
 
   mock.onGet('/users/status').reply(() => {
     // const data = JSON.parse(config.data);
-    console.log(userId);
     if (userId === 3) return [200, adminUser];
     return [200, normalUser];
   });

@@ -7,6 +7,12 @@ const getList = params => {
   return get({ url, params });
 };
 
+const getBasicData = params => {
+  const url = `${apiConfig.apiHost}/${apiConfig.apiBasicData}`;
+  return get({ url, params });
+};
+
 export default {
   getList,
+  getBasicData,
 };

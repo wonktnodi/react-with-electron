@@ -13,13 +13,19 @@ export const userLogout = () => {
 
 export const getListsData = (params, callback) => {
   const stateName = types.LIST_DATA_FETCH;
-  return callApi(stateName, params, callback);
+  return callApi(stateName, params||{}, callback);
 };
 
 export const userStatus = () => {
   const stateName = types.USER_STATUS;
   return doAsyncAction(stateName);
 };
+
+export const getListBasics = (params, callback) => {
+  const stateName = types.LIST_DATA_BASICS;
+  return callApi(stateName, params||{}, callback);
+};
+
 // export const userLogout = () => dispatch => {
 //   try {
 //     const urlParams = new URL(window.location.href);
