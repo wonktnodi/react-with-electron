@@ -1,6 +1,6 @@
 const path = require('path');
 const { injectBabelPlugin } = require('react-app-rewired');
-const rewireLessModule = require('./build/react-app-rewire-less-module');
+const rewireLessModule = require('./public/react-app-rewire-less-module');
 
 module.exports = function override(config, env) {
   config = injectBabelPlugin('transform-decorators-legacy', config);

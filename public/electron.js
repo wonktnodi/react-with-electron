@@ -1,4 +1,5 @@
 const electron = require('electron');
+const { MenuBuilder } = require('./electronMenu');
 
 const Menu = electron.Menu;
 const app = electron.app;
@@ -64,8 +65,8 @@ async function createWindow() {
 
   mainWindow.on('closed', () => (mainWindow = null));
 
-  // var menu = Menu.buildFromTemplate(template);
-  // Menu.setApplicationMenu(menu);
+  const menuBuilder = new MenuBuilder(mainWindow);
+  menuBuilder.buildMenu();
 }
 
 app.on('ready', createWindow);
